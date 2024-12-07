@@ -1,0 +1,187 @@
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Dynamic Donut Chart</title>
+ <style>
+ /* General Reset */
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
+ /* Body Styling */
+ body {
+ font-family: Arial, sans-serif;
+ line-height: 1.6;
+ color: #333;
+ background-color: #E5D9F2;
+ padding: 20px;
+ }
+ /* Header */
+ header {
+ text-align: center;
+ margin-bottom: 20px;
+ }
+ header h1 {
+ font-size: 40px;
+ }
+ /* Main Section */
+ main {
+ display: flex;
+ flex-direction: column;
+ gap: 30px;
+ }
+/* Donut Chart Section */
+ #donut-chart {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ }
+ #donut-chart canvas {
+ max-width: 400px; /* Adjust max width for better display */
+ width: 100%; /* Ensure it remains responsive */
+ height: auto; /* Maintain aspect ratio */
+ }
+ /* Grid Section */
+ #grid-section {
+ padding: 10px;
+ }
+ .grid {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 20px;
+ justify-content: center;
+ }
+ .card {
+ background: white;
+ border-radius: 8px;
+ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+ overflow: hidden;
+ transition: transform 0.3s, box-shadow 0.3s;
+ max-width: 300px;
+ flex: 1 1 calc(33.333%-20px);
+ }
+ .card img {
+ width: 100%;
+ height: 150px;
+ object-fit: cover;
+}
+ .card-content {
+ padding: 15px;
+ }
+ .card-content h3 {
+ font-size: 1.2rem;
+ margin-bottom: 10px;
+ }
+ .card-content p {
+ font-size: 0.9rem;
+ color: #666;
+ }
+ .card:hover {
+ transform: scale(1.05);
+ box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+ }
+ /* Responsive Design */
+ @media (max-width: 768px) {
+ .card {
+ flex: 1 1 calc(50%-20px);
+ }
+ }
+ @media (max-width: 480px) {
+ .card {
+ flex: 1 1 calc(100%-20px);
+ }
+ }
+ /* Footer */
+ footer {
+ text-align: center;
+ margin-top: 20px;
+ font-size: 0.9rem;
+ color: #aaa;
+}
+ </style>
+ </head>
+ <body>
+ <header>
+ <h1>Dynamic Dashboard</h1>
+ <h3 id="subtitle">Data last updated on:</h3>
+ </header>
+ <main>
+ <section id="donut-chart">
+ <h2>Donut Chart</h2>
+ </section>
+ <section id="grid-section">
+ <h2>Products</h2>
+ <div class="grid" id="grid-container"></div>
+ </section>
+ </main>
+ <footer>
+ &copy; 2024 Dashboard Inc.
+ </footer>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script>
+ document.addEventListener('DOMContentLoaded', () => {
+ // Update date in the subtitle with the current date and time
+ const lastUpdated = document.getElementById('subtitle');
+ lastUpdated.textContent += ` ${new Date().toLocaleString()}`;
+ // Create a canvas element for the donut chart
+ const ctx = document.createElement('canvas');
+ document.getElementById('donut-chart').appendChild(ctx);
+ // Initialize the donut chart using Chart.js
+ const donutChart = new Chart(ctx, {
+ type: 'doughnut', // Define the chart type as 'doughnut'
+ data: {
+ labels: ['Completed', 'Pending'], // Labels for the chart
+ datasets: [{
+ data: [40, 60], // Initial data for the chart
+backgroundColor: ['#4CAF50', '#FF9800'] // Colors for the
+ }]
+ },
+ options: {
+ responsive: true,
+ maintainAspectRatio: false // Maintain aspect ratio for better
+ }
+ });
+ // Function to update the chart with new data
+ function updateChart(newData) {
+ donutChart.data.datasets[0].data = Object.values(newData);
+ donutChart.update(); // Redraw the chart
+ }
+ // Example of updating the chart data after 5 seconds
+ setTimeout(() => {
+ const newChartData = { "Completed": 70, "Pending": 30 }; // New
+ updateChart(newChartData); // Update the chart with new data
+ }, 5000);
+ // Data for the dynamic flex grid
+ const gridData = [
+ { title: "Product A", description: "This is product A.", image: ""
+ },
+ { title: "Product B", description: "This is product B.", image: ""
+ },
+ { title: "Product C", description: "This is product C.", image: ""
+ },
+ ];
+ // Get the grid container element
+ const gridContainer = document.getElementById('grid-container');
+ // Loop through the data to create and append grid items
+ gridData.forEach(item => {
+const gridItem = document.createElement('div');
+ gridItem.className = 'card'; // Apply the 'card' class for styling
+ gridItem.innerHTML = `
+ <img src="${item.image || 'https://via.placeholder.com/150'}"
+ alt="${item.title}">
+ <div class="card-content">
+ <h3>${item.title}</h3>
+ <p>${item.description}</p>
+ </div>
+ `;
+ gridContainer.appendChild(gridItem); // Append the grid item to
+ });
+ });
+ </script>
+ </body>
+ </html>
+ 
